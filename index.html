@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether Dashboard - Premium Glassmorphic Workspace</title>
+    <meta name="description" content="A sleek, responsive, and interactive glassmorphic personal workspace dashboard featuring a live weather engine, simulated system stats, lofi music player with canvas visualizer, task manager, and custom theme overrides.">
+    
+    <!-- Google Fonts: Inter (Body), Outfit (Headings), JetBrains Mono (Code/Stats) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Core Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-cyan">
+    <!-- Canvas for Ambient Cosmic Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- App Wrapper -->
+    <div id="app-container">
+        <!-- Header Command Bar -->
+        <header id="main-header" class="glass-panel">
+            <div class="logo-area">
+                <i class="fa-solid fa-compass-drafting glow-icon"></i>
+                <h1>AETHER <span class="accent-text">OS</span></h1>
+            </div>
+            <div class="greeting-area">
+                <span id="greeting-text">Initializing workspace...</span>
+            </div>
+            <div class="header-status">
+                <div class="status-item">
+                    <span class="status-indicator online"></span>
+                    <span class="status-label">SYS_ONLINE</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Workspace Grid -->
+        <main id="dashboard-grid">
+            
+            <!-- Column 1: Time, Weather & Music -->
+            <div class="grid-column">
+                
+                <!-- Time & Weather Widget -->
+                <section id="weather-clock-widget" class="glass-panel interactive-card" aria-label="Time and Weather Dashboard">
+                    <!-- High-tech Clock -->
+                    <div class="clock-display">
+                        <div id="clock-time">00:00:00</div>
+                        <div id="clock-date">LOADING DATE</div>
+                    </div>
+                    <!-- Weather Display -->
+                    <div class="weather-display">
+                        <div class="weather-visual">
+                            <canvas id="weather-canvas" width="120" height="120"></canvas>
+                            <span id="weather-temp">--°C</span>
+                        </div>
+                        <div class="weather-details">
+                            <div id="weather-status">Calibrating...</div>
+                            <div class="weather-sub-details">
+                                <span><i class="fa-solid fa-droplet"></i> Hum: <span id="weather-humidity">--%</span></span>
+                                <span><i class="fa-solid fa-wind"></i> Wind: <span id="weather-wind">-- km/h</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Weather Control -->
+                    <div class="weather-city-selector">
+                        <button class="city-btn active" id="city-btn-neo" data-city="Neo-Tokyo">Neo-Tokyo</button>
+                        <button class="city-btn" id="city-btn-aether" data-city="Aether City">Aether City</button>
+                        <button class="city-btn" id="city-btn-orbit" data-city="Orbital Terminal">Orbital-7</button>
+                    </div>
+                </section>
+
+                <!-- Aether Music Player & Visualizer -->
+                <section id="music-player-widget" class="glass-panel interactive-card" aria-label="Aether Sound System">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-music"></i> Aether Sound</h2>
+                        <span class="header-badge">LO-FI FEED</span>
+                    </div>
+                    <!-- Canvas Audio Visualizer -->
+                    <div class="visualizer-container">
+                        <canvas id="visualizer-canvas" height="60"></canvas>
+                    </div>
+                    <!-- Track Details -->
+                    <div class="track-details">
+                        <div class="track-artwork" id="track-art">
+                            <i class="fa-solid fa-record-vinyl spinning-record"></i>
+                        </div>
+                        <div class="track-info">
+                            <div id="track-title" class="marquee">Aetherial Drift</div>
+                            <div id="track-artist">Lofi Core</div>
+                        </div>
+                    </div>
+                    <!-- Progress bar -->
+                    <div class="player-timeline">
+                        <span id="time-current">0:00</span>
+                        <div class="timeline-bar" id="timeline-slider" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+                            <div class="timeline-progress" id="timeline-progress"></div>
+                            <div class="timeline-handle" id="timeline-handle"></div>
+                        </div>
+                        <span id="time-duration">0:00</span>
+                    </div>
+                    <!-- Controls -->
+                    <div class="player-controls">
+                        <button id="btn-shuffle" class="control-btn" title="Shuffle"><i class="fa-solid fa-shuffle"></i></button>
+                        <button id="btn-prev" class="control-btn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
+                        <button id="btn-play-pause" class="control-btn play-btn" title="Play"><i class="fa-solid fa-play"></i></button>
+                        <button id="btn-next" class="control-btn" title="Next"><i class="fa-solid fa-forward-step"></i></button>
+                        <div class="volume-container">
+                            <button id="btn-mute" class="control-btn" title="Mute"><i class="fa-solid fa-volume-high"></i></button>
+                            <div class="volume-slider" id="volume-slider" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="80" tabindex="0">
+                                <div class="volume-progress" id="volume-progress" style="width: 80%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Column 2: System Monitor & Daily Focus -->
+            <div class="grid-column">
+                
+                <!-- System Metrics Monitor -->
+                <section id="system-stats-widget" class="glass-panel interactive-card" aria-label="System Metrics Monitor">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-server"></i> System Core</h2>
+                        <span class="header-badge" id="stats-freq">3.80 GHz</span>
+                    </div>
+                    
+                    <div class="metrics-grid">
+                        <!-- CPU Radial -->
+                        <div class="metric-radial-card">
+                            <div class="radial-outer">
+                                <svg width="80" height="80">
+                                    <circle class="radial-track" cx="40" cy="40" r="32"></circle>
+                                    <circle class="radial-progress" id="cpu-radial" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="201"></circle>
+                                </svg>
+                                <span class="radial-value" id="cpu-text">0%</span>
+                            </div>
+                            <span class="metric-name">CPU LOAD</span>
+                        </div>
+                        
+                        <!-- RAM Radial -->
+                        <div class="metric-radial-card">
+                            <div class="radial-outer">
+                                <svg width="80" height="80">
+                                    <circle class="radial-track" cx="40" cy="40" r="32"></circle>
+                                    <circle class="radial-progress" id="ram-radial" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="201"></circle>
+                                </svg>
+                                <span class="radial-value" id="ram-text">0%</span>
+                            </div>
+                            <span class="metric-name">MEM USE</span>
+                        </div>
+                    </div>
+
+                    <!-- System Line Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <span class="chart-title">CORE ACTIVITY HISTORY</span>
+                            <div class="chart-legend">
+                                <span class="legend-item"><span class="legend-color cpu"></span> CPU</span>
+                                <span class="legend-item"><span class="legend-color ram"></span> RAM</span>
+                            </div>
+                        </div>
+                        <canvas id="metrics-chart" height="110"></canvas>
+                    </div>
+
+                    <!-- Additional mini stats -->
+                    <div class="mini-stats-bar">
+                        <div class="mini-stat">
+                            <span class="mini-stat-label">NET DOWN</span>
+                            <span class="mini-stat-value" id="net-down-val">24.5 Mbps</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="mini-stat-label">NET UP</span>
+                            <span class="mini-stat-value" id="net-up-val">8.2 Mbps</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="mini-stat-label">STORAGE</span>
+                            <span class="mini-stat-value" id="storage-val">42%</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Daily Focus / Task Board -->
+                <section id="task-board-widget" class="glass-panel interactive-card" aria-label="Task Manager">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-list-check"></i> Focus Board</h2>
+                        <span class="header-badge" id="task-count">0 / 0 Done</span>
+                    </div>
+
+                    <!-- Task Input -->
+                    <form id="task-form">
+                        <input type="text" id="task-input" placeholder="Initiate a new objective..." required>
+                        <select id="task-category" aria-label="Category Selection">
+                            <option value="Code">💻 Code</option>
+                            <option value="Design">🎨 Design</option>
+                            <option value="Work">💼 Work</option>
+                            <option value="Life">🔋 Life</option>
+                        </select>
+                        <button type="submit" id="btn-add-task" aria-label="Add Objective">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </form>
+
+                    <!-- Task List -->
+                    <div class="tasks-scroll-container">
+                        <ul id="task-list">
+                            <!-- Tasks will be injected dynamically -->
+                        </ul>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Column 3: Notepad & Control Panel -->
+            <div class="grid-column">
+                
+                <!-- Aether Notes -->
+                <section id="notes-widget" class="glass-panel interactive-card" aria-label="Aether Notes">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-feather-pointed"></i> Aether Notes</h2>
+                        <span id="save-indicator" class="header-badge-secondary">AUTO-SAVED</span>
+                    </div>
+                    <textarea id="notes-textarea" placeholder="Record telemetry, ideas, or reminders here..."></textarea>
+                </section>
+
+                <!-- Core Control Panel -->
+                <section id="control-panel-widget" class="glass-panel interactive-card" aria-label="System Toggles and Customization">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-sliders"></i> Control deck</h2>
+                    </div>
+
+                    <div class="control-grid">
+                        <!-- Ambient FX Toggle -->
+                        <div class="control-item">
+                            <div class="control-info">
+                                <span class="control-title">Ambient Particles</span>
+                                <span class="control-desc">Interactive canvas backdrop</span>
+                            </div>
+                            <label class="switch" for="toggle-particles">
+                                <input type="checkbox" id="toggle-particles" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Audio FX Toggle -->
+                        <div class="control-item">
+                            <div class="control-info">
+                                <span class="control-title">Interface Audio</span>
+                                <span class="control-desc">Acoustic click feedback</span>
+                            </div>
+                            <label class="switch" for="toggle-audio-fx">
+                                <input type="checkbox" id="toggle-audio-fx" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Theme Switcher -->
+                    <div class="theme-selector-section">
+                        <span class="selector-title">SELECT COORDINATE THEME</span>
+                        <div class="themes-flex">
+                            <button class="theme-btn active" id="theme-btn-cyan" data-theme="theme-cyan" title="Cyan Neon">
+                                <span class="color-dot cyan"></span> Cyan
+                            </button>
+                            <button class="theme-btn" id="theme-btn-pink" data-theme="theme-pink" title="Cyber Pink">
+                                <span class="color-dot pink"></span> Pink
+                            </button>
+                            <button class="theme-btn" id="theme-btn-amber" data-theme="theme-amber" title="Amber Gold">
+                                <span class="color-dot amber"></span> Amber
+                            </button>
+                            <button class="theme-btn" id="theme-btn-green" data-theme="theme-green" title="Emerald Aura">
+                                <span class="color-dot green"></span> Green
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Clear Workspace -->
+                    <div class="danger-zone-section">
+                        <button id="btn-purge-workspace" class="danger-btn">
+                            <i class="fa-solid fa-triangle-exclamation"></i> PURGE CACHED TELEMETRY
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+        
+        <!-- Bottom Information bar -->
+        <footer id="main-footer" class="glass-panel">
+            <div class="footer-left">
+                <span>COORD: <span class="accent-text" id="coord-val">35.6762° N, 139.6503° E</span></span>
+            </div>
+            <div class="footer-center">
+                <span>AETHER OS v1.2.0 • CORE TELEMETRY STATUS</span>
+            </div>
+            <div class="footer-right">
+                <span id="footer-fps">FPS: --</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Web Application Logic (JS ES Modules) -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
