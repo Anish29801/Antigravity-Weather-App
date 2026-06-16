@@ -42,6 +42,28 @@ export default function WeatherCard() {
     }
   };
 
+  const handleGeolocation = () => {
+    playClickSound(1400, 800, 0.04);
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const coords = {
+          lat: position.coords.latitude,
+          lon: position.coords.longitude
+        };
+        setCity(coords);
+      },
+      (err) => {
+        alert(`Failed to retrieve location: ${err.message}`);
+      }
+    );
+  };
+
+  const isDeviceActive = city && typeof city === 'object';
+
   return (
     <section id="weather-clock-widget" className="glass-panel interactive-card" aria-label="Time and Weather Dashboard">
       {/* High-tech Clock */}
@@ -89,6 +111,13 @@ export default function WeatherCard() {
           onClick={() => handleCityChange('Orbital Terminal')}
         >
           Orbital-7
+        </button>
+        <button 
+          className={`city-btn ${isDeviceActive ? 'active' : ''}`}
+          onClick={handleGeolocation}
+          title="Scan Local Position Weather"
+        >
+          <i className="fa-solid fa-location-crosshairs"></i> Scan
         </button>
       </div>
     </section>

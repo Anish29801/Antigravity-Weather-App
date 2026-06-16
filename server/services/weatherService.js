@@ -142,6 +142,100 @@ const getCurrentWeather = async (city, userId) => {
   return updatedDoc.data;
 };
 
+const generateSimulatedCoordsWeather = (lat, lon) => {
+  const finalTemp = Math.round(15 + Math.random() * 12);
+  const finalWind = Math.round(8 + Math.random() * 15);
+  const finalHum = Math.round(50 + Math.random() * 30);
+  
+  const formattedLat = Math.abs(lat).toFixed(4) + (lat >= 0 ? '° N' : '° S');
+  const formattedLon = Math.abs(lon).toFixed(4) + (lon >= 0 ? '° E' : '° W');
+
+  return {
+    temp: `${finalTemp}°C`,
+    status: 'Local Scan',
+    humidity: `${finalHum}%`,
+    wind: `${finalWind} km/h`,
+    coord: `${formattedLat}, ${formattedLon}`,
+    type: Math.random() > 0.5 ? 'orbit' : 'mist'
+  };
+};
+
+const getWeatherByCoords = async (lat, lon, userId) => {
+  const cacheKey = 'device_location';
+  
+  // 1. Check cache
+  const cached = await Weather.findOne({ city: cacheKey, userId });
+  if (cached && isFresh(cached.updatedAt)) {
+    logger.info(`Weather cache HIT for coordinates: ${lat}, ${lon} (cached device location)`);
+    return cached.data;
+  }
+
+  logger.info(`Weather cache MISS/EXPIRED for coordinates: ${lat}, ${lon}. Querying OpenWeather...`);
+
+  let weatherData;
+  const apiKey = process.env.OPENWEATHER_API_KEY;
+  const isDummyKey = !apiKey || apiKey.includes('dummy_') || apiKey === 'your_api_key_here';
+
+  if (!isDummyKey) {
+    try {
+      const response = await axios.get('https://api.openweathermap.org/data/2.5/weather', {
+        params: {
+          lat: lat,
+          lon: lon,
+          appid: apiKey,
+          units: 'metric'
+        },
+        timeout: 5000
+      });
+
+      const data = response.data;
+      
+      let type = 'orbit';
+      let status = data.weather[0].main;
+      const weatherId = data.weather[0].id;
+      
+      if (weatherId < 700) {
+        type = 'storm';
+      } else if (weatherId >= 700 && weatherId < 800) {
+        type = 'mist';
+      } else if (weatherId > 800) {
+        type = 'mist'; // Cloudy
+      } else {
+        type = 'orbit'; // Clear
+      }
+
+      const formattedLat = Math.abs(lat).toFixed(4) + (lat >= 0 ? '° N' : '° S');
+      const formattedLon = Math.abs(lon).toFixed(4) + (lon >= 0 ? '° E' : '° W');
+
+      weatherData = {
+        temp: `${Math.round(data.main.temp)}°C`,
+        status: `${status} (${data.name})`,
+        humidity: `${data.main.humidity}%`,
+        wind: `${Math.round(data.wind.speed * 3.6)} km/h`,
+        coord: `${formattedLat}, ${formattedLon}`,
+        type: type
+      };
+
+      logger.info(`Successfully fetched coordinates weather for ${lat}, ${lon} (${data.name}) from OpenWeather`);
+    } catch (error) {
+      logger.warn(`OpenWeather coordinates fetch failed: ${error.message}. Falling back to simulation...`);
+      weatherData = generateSimulatedCoordsWeather(lat, lon);
+    }
+  } else {
+    weatherData = generateSimulatedCoordsWeather(lat, lon);
+  }
+
+  // Cache in Database
+  const updatedDoc = await Weather.findOneAndUpdate(
+    { city: cacheKey, userId },
+    { data: weatherData, updatedAt: new Date() },
+    { upsert: true, new: true }
+  );
+
+  return updatedDoc.data;
+};
+
 module.exports = {
-  getCurrentWeather
+  getCurrentWeather,
+  getWeatherByCoords
 };

@@ -27,3 +27,7 @@ Thumbs.db
 
 # AI Context
 ai_context/
+
+# Coverage
+coverage/
+server/coverage/

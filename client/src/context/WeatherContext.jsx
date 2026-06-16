@@ -11,12 +11,18 @@ export const WeatherProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchWeather = async (cityName) => {
+  const fetchWeather = async (location) => {
     if (!isAuthenticated) return;
     setLoading(true);
     setError('');
     try {
-      const response = await api.get(`/weather/current?city=${encodeURIComponent(cityName)}`);
+      let endpoint = '/weather/current';
+      if (location && typeof location === 'object' && location.lat !== undefined && location.lon !== undefined) {
+        endpoint += `?lat=${location.lat}&lon=${location.lon}`;
+      } else {
+        endpoint += `?city=${encodeURIComponent(location)}`;
+      }
+      const response = await api.get(endpoint);
       if (response.data && response.data.success) {
         setWeatherData(response.data.data);
       } else {

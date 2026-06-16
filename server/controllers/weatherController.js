@@ -6,19 +6,32 @@ const { BadRequestError } = require('../utils/errors');
 // @route   GET /api/weather/current
 // @access  Private
 exports.getCurrentWeather = asyncHandler(async (req, res, next) => {
-  const { city } = req.query;
+  const { city, lat, lon } = req.query;
   
-  if (!city) {
-    return next(new BadRequestError('Please provide a city name'));
-  }
+  let weather;
 
-  // Supported cities verification
-  const supportedCities = ['Neo-Tokyo', 'Aether City', 'Orbital Terminal'];
-  if (!supportedCities.includes(city)) {
-    return next(new BadRequestError(`Unsupported city: '${city}'. Telemetry only calibrates Neo-Tokyo, Aether City, and Orbital Terminal.`));
-  }
+  if (lat !== undefined && lon !== undefined) {
+    const latitude = parseFloat(lat);
+    const longitude = parseFloat(lon);
 
-  const weather = await weatherService.getCurrentWeather(city, req.user._id);
+    if (isNaN(latitude) || isNaN(longitude)) {
+      return next(new BadRequestError('Latitude and Longitude must be numbers'));
+    }
+
+    weather = await weatherService.getWeatherByCoords(latitude, longitude, req.user._id);
+  } else {
+    if (!city) {
+      return next(new BadRequestError('Please provide a city name or coordinates (lat, lon)'));
+    }
+
+    // Supported cities verification
+    const supportedCities = ['Neo-Tokyo', 'Aether City', 'Orbital Terminal'];
+    if (!supportedCities.includes(city)) {
+      return next(new BadRequestError(`Unsupported city: '${city}'. Telemetry only calibrates Neo-Tokyo, Aether City, and Orbital Terminal.`));
+    }
+
+    weather = await weatherService.getCurrentWeather(city, req.user._id);
+  }
 
   res.status(200).json({
     success: true,
