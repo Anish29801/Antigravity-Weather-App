@@ -4,12 +4,13 @@ import { useTheme } from '../../context/ThemeContext';
 import WeatherCanvas from './WeatherCanvas';
 
 export default function WeatherCard() {
-  const { city, setCity, weatherData, loading, error } = useWeather();
+  const { city, setCity, weatherData, loading, error, recentCities } = useWeather();
   const { playClickSound } = useTheme();
 
   // Time & Date State
   const [timeStr, setTimeStr] = useState('00:00:00');
   const [dateStr, setDateStr] = useState('LOADING DATE');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const updateTime = () => {
@@ -42,6 +43,15 @@ export default function WeatherCard() {
     }
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      playClickSound(1400, 800, 0.04);
+      setCity(searchQuery.trim());
+      setSearchQuery('');
+    }
+  };
+
   const handleGeolocation = () => {
     playClickSound(1400, 800, 0.04);
     if (!navigator.geolocation) {
@@ -63,6 +73,7 @@ export default function WeatherCard() {
   };
 
   const isDeviceActive = city && typeof city === 'object';
+  const displayCityName = weatherData?.cityName || (typeof city === 'string' ? city : 'Local Position');
 
   return (
     <section id="weather-clock-widget" className="glass-panel interactive-card" aria-label="Time and Weather Dashboard">
@@ -80,7 +91,9 @@ export default function WeatherCard() {
         </div>
         
         <div className="weather-details">
-          <div id="weather-status">{loading ? 'Calibrating...' : (error ? 'Telemetry Error' : (weatherData?.status || 'Offline'))}</div>
+          <div id="weather-status">
+            {loading ? 'Calibrating...' : (error ? 'Telemetry Error' : `${weatherData?.status || 'Offline'} (${displayCityName})`)}
+          </div>
           <div className="weather-sub-details">
             <span>
               <i className="fa-solid fa-droplet"></i> Hum: <span id="weather-humidity">{loading ? '--' : (weatherData?.humidity || '--%')}</span>
@@ -92,33 +105,38 @@ export default function WeatherCard() {
         </div>
       </div>
 
+      {/* Search Input for real cities */}
+      <form onSubmit={handleSearchSubmit} className="weather-search-container">
+        <input
+          type="text"
+          placeholder="Search real city/region..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="weather-search-input"
+        />
+        <button type="submit" className="weather-search-btn" title="Search City">
+          <i className="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </form>
+
       {/* Weather Control */}
       <div className="weather-city-selector">
-        <button 
-          className={`city-btn ${city === 'Neo-Tokyo' ? 'active' : ''}`}
-          onClick={() => handleCityChange('Neo-Tokyo')}
-        >
-          Neo-Tokyo
-        </button>
-        <button 
-          className={`city-btn ${city === 'Aether City' ? 'active' : ''}`}
-          onClick={() => handleCityChange('Aether City')}
-        >
-          Aether City
-        </button>
-        <button 
-          className={`city-btn ${city === 'Orbital Terminal' ? 'active' : ''}`}
-          onClick={() => handleCityChange('Orbital Terminal')}
-        >
-          Orbital-7
-        </button>
         <button 
           className={`city-btn ${isDeviceActive ? 'active' : ''}`}
           onClick={handleGeolocation}
           title="Scan Local Position Weather"
         >
-          <i className="fa-solid fa-location-crosshairs"></i> Scan
+          <i className="fa-solid fa-location-crosshairs"></i> Current Location
         </button>
+        {recentCities.map((c) => (
+          <button 
+            key={c}
+            className={`city-btn ${city === c ? 'active' : ''}`}
+            onClick={() => handleCityChange(c)}
+          >
+            {c}
+          </button>
+        ))}
       </div>
     </section>
   );

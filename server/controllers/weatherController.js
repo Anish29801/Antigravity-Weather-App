@@ -24,12 +24,6 @@ exports.getCurrentWeather = asyncHandler(async (req, res, next) => {
       return next(new BadRequestError('Please provide a city name or coordinates (lat, lon)'));
     }
 
-    // Supported cities verification
-    const supportedCities = ['Neo-Tokyo', 'Aether City', 'Orbital Terminal'];
-    if (!supportedCities.includes(city)) {
-      return next(new BadRequestError(`Unsupported city: '${city}'. Telemetry only calibrates Neo-Tokyo, Aether City, and Orbital Terminal.`));
-    }
-
     weather = await weatherService.getCurrentWeather(city, req.user._id);
   }
 

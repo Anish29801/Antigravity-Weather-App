@@ -67,11 +67,16 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Search Input for real cities -->
+                    <form id="weather-search-form" class="weather-search-container">
+                        <input type="text" id="weather-search-input" class="weather-search-input" placeholder="Search real city/region...">
+                        <button type="submit" class="weather-search-btn" title="Search City">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </form>
                     <!-- Weather Control -->
-                    <div class="weather-city-selector">
-                        <button class="city-btn active" id="city-btn-neo" data-city="Neo-Tokyo">Neo-Tokyo</button>
-                        <button class="city-btn" id="city-btn-aether" data-city="Aether City">Aether City</button>
-                        <button class="city-btn" id="city-btn-orbit" data-city="Orbital Terminal">Orbital-7</button>
+                    <div class="weather-city-selector" id="weather-city-buttons">
+                        <!-- Buttons will be injected dynamically -->
                     </div>
                 </section>
 

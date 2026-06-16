@@ -23,9 +23,9 @@ describe('Weather API Suite', () => {
     await User.deleteMany({});
   });
 
-  it('should get weather for a supported city (Neo-Tokyo)', async () => {
+  it('should get weather for a city (Tokyo)', async () => {
     const res = await request(app)
-      .get('/api/weather/current?city=Neo-Tokyo');
+      .get('/api/weather/current?city=Tokyo');
 
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
@@ -34,13 +34,15 @@ describe('Weather API Suite', () => {
     expect(res.body.data.wind).toBeDefined();
   });
 
-  it('should return error for an unsupported city', async () => {
+  it('should get weather for any other city (London)', async () => {
     const res = await request(app)
       .get('/api/weather/current?city=London');
 
-    expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBe(false);
-    expect(res.body.error.message).toContain('Unsupported city');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.temp).toBeDefined();
+    expect(res.body.data.humidity).toBeDefined();
+    expect(res.body.data.wind).toBeDefined();
   });
 
   it('should get weather for coordinates', async () => {

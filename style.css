@@ -447,6 +447,52 @@ body::after {
     border: 1px solid var(--glass-border);
 }
 
+.weather-search-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.weather-search-input {
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--glass-border);
+    outline: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 13px;
+    transition: all var(--transition-fast);
+}
+
+.weather-search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.25);
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.weather-search-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.weather-search-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+    text-shadow: var(--accent-glow);
+}
+
 .city-btn {
     flex-grow: 1;
     background: transparent;
