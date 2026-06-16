@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ==========================================================================
    AETHER OS - DESIGN SYSTEM & STYLESHEET
    Aesthetics: Futuristic Glassmorphism, Neon Accents, Rich Micro-interactions
@@ -203,47 +207,14 @@ body::after {
     border-color: rgba(var(--accent-rgb), 0.25);
 }
 
-/* --- Header --- */
-#main-header {
-    height: 70px;
-    padding: 0 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    animation: slideDown var(--transition-slow) forwards;
-}
 
-.logo-area {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.logo-area i {
-    font-size: 24px;
-    color: var(--accent);
-    text-shadow: var(--accent-glow);
-}
-
-.logo-area h1 {
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: 20px;
-    letter-spacing: 2px;
-}
 
 .accent-text {
     color: var(--accent);
     text-shadow: var(--accent-glow);
 }
 
-.greeting-area {
-    font-family: var(--font-heading);
-    font-weight: 500;
-    font-size: 15px;
-    color: var(--text-secondary);
-    letter-spacing: 0.5px;
-}
+
 
 .header-status {
     display: flex;
@@ -1233,24 +1204,7 @@ body::after {
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.35);
 }
 
-/* --- Footer --- */
-#main-footer {
-    height: 48px;
-    padding: 0 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.5px;
-    color: var(--text-secondary);
-    animation: slideUp var(--transition-slow) forwards;
-}
 
-.footer-left, .footer-right {
-    display: flex;
-    align-items: center;
-}
 
 /* --- Keyframe Animations --- */
 @keyframes pulse {
@@ -1296,51 +1250,4 @@ body::after {
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* --- Responsive Layout Breaks --- */
-@media (max-width: 1200px) {
-    #dashboard-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-    /* Move third column stuff somewhere or let it flow */
-    #dashboard-grid .grid-column:nth-child(3) {
-        grid-column: span 2;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-    }
-    #notes-widget, #control-panel-widget {
-        height: 310px;
-    }
-}
 
-@media (max-width: 768px) {
-    #app-container {
-        padding: 12px;
-        gap: 16px;
-    }
-    #main-header {
-        flex-direction: column;
-        height: auto;
-        padding: 16px;
-        gap: 10px;
-        text-align: center;
-    }
-    #dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    #dashboard-grid .grid-column:nth-child(3) {
-        grid-column: span 1;
-        grid-template-columns: 1fr;
-    }
-    #weather-clock-widget, #music-player-widget, #system-stats-widget, #task-board-widget, #notes-widget, #control-panel-widget {
-        height: auto;
-    }
-    #main-footer {
-        flex-direction: column;
-        height: auto;
-        padding: 16px;
-        gap: 8px;
-        text-align: center;
-    }
-}

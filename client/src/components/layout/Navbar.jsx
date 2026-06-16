@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -24,27 +23,29 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header id="main-header" className="glass-panel">
-      <div className="logo-area">
-        <i className="fa-solid fa-compass-drafting glow-icon"></i>
-        <h1>AETHER <span className="accent-text">OS</span></h1>
+    <header className="glass-panel h-[70px] px-6 flex justify-between items-center animate-[slideDown_0.8s_forwards]">
+      <div className="flex items-center gap-3">
+        <i className="fa-solid fa-compass-drafting text-2xl text-[var(--accent)] drop-shadow-[0_0_8px_var(--accent)]"></i>
+        <h1 className="font-heading font-extrabold text-xl tracking-[2px]">
+          AETHER <span className="accent-text">OS</span>
+        </h1>
       </div>
       
-      <div className="greeting-area">
+      <div className="font-heading font-medium text-[15px] text-[var(--text-secondary)] tracking-[0.5px]">
         <span id="greeting-text">{greeting}</span>
       </div>
 
-      <div style={styles.navRight}>
+      <div className="flex items-center gap-5">
         {user && (
-          <div style={styles.userInfo}>
-            <span style={styles.userName}>
-              <i className="fa-solid fa-user-shield" style={{ marginRight: '6px', color: 'var(--accent)' }}></i>
+          <div className="flex items-center bg-[rgba(255,255,255,0.02)] border border-[var(--glass-border)] py-1.5 px-3.5 rounded-[30px] font-mono text-[11px] tracking-[0.5px]">
+            <span className="text-[var(--text-primary)]">
+              <i className="fa-solid fa-user-shield mr-1.5 text-[var(--accent)]"></i>
               {user.name.toUpperCase()}
             </span>
           </div>
         )}
         
-        <div className="header-status" style={{ gap: '12px', display: 'flex', alignItems: 'center' }}>
+        <div className="flex items-center gap-3">
           <div className="status-item">
             <span className="status-indicator online"></span>
             <span className="status-label">SYS_ONLINE</span>
@@ -54,40 +55,3 @@ export default function Navbar() {
     </header>
   );
 }
-
-const styles = {
-  navRight: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '20px'
-  },
-  userInfo: {
-    display: 'flex',
-    alignItems: 'center',
-    background: 'rgba(255, 255, 255, 0.02)',
-    border: '1px solid var(--glass-border)',
-    padding: '6px 14px',
-    borderRadius: '30px',
-    fontFamily: 'var(--font-mono)',
-    fontSize: '11px',
-    letterSpacing: '0.5px'
-  },
-  userName: {
-    color: 'var(--text-primary)'
-  },
-  logoutBtn: {
-    background: 'transparent',
-    border: 'none',
-    color: 'var(--text-secondary)',
-    cursor: 'pointer',
-    fontSize: '14px',
-    padding: '6px',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.2s ease',
-    outline: 'none'
-  }
-};
-// Hover styles can be added in CSS, but let's keep inline style simple

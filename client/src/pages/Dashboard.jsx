@@ -17,26 +17,26 @@ export default function Dashboard() {
       <BackgroundCanvas />
 
       {/* App Shell */}
-      <div id="app-container">
+      <div id="app-container" className="flex flex-col gap-6 p-3 md:p-6 w-full max-w-[1600px] min-h-screen relative z-10 mx-auto">
         <Navbar />
 
         {/* 3-Column Grid Layout */}
-        <main id="dashboard-grid">
+        <main className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-[1fr_1.25fr_1fr] gap-6 flex-grow">
           
           {/* Column 1: Time/Weather & Audio Synth */}
-          <div className="grid-column">
+          <div className="flex flex-col gap-6">
             <WeatherCard />
             <AudioPlayer />
           </div>
 
           {/* Column 2: System Monitor & Focus Task Checklist */}
-          <div className="grid-column">
+          <div className="flex flex-col gap-6">
             <StatsPanel />
             <TaskList />
           </div>
 
           {/* Column 3: Debounced Notes Notepad & Settings Toggles */}
-          <div className="grid-column">
+          <div className="flex flex-col gap-6 md:col-span-2 xl:col-span-1 md:grid md:grid-cols-2 xl:flex xl:flex-col">
             <NotesEditor />
             <ControlDeck />
           </div>
